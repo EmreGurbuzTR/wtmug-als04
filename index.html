@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="icon-192.svg">
-<title>Barkod Okuyucu · Market</title>
+<title>Barkod Okuyucu Â· Market</title>
 <style>
   :root{
     --bg:#0b1220; --surface:#151d2f; --surface-2:#1e2839; --border:#2a3448;
@@ -165,7 +165,7 @@
 
 <header>
   <h1>?? Barkod Okuyucu</h1>
-  <div class="sub">Market fiyat kontrol · PWA Laboratuvarý</div>
+  <div class="sub">Market fiyat kontrol Â· PWA LaboratuvarÄ±</div>
   <div class="mode-toggle" id="modeToggle">
     <button data-mode="single" class="active">?? Tekli Sorgu</button>
     <button data-mode="cart">??? Sepet Modu</button>
@@ -173,12 +173,12 @@
 </header>
 
 <main>
-  <div class="db-status" id="dbStatus">Ürün veritabaný yükleniyor…</div>
+  <div class="db-status" id="dbStatus">ÃœrÃ¼n veritabanÄ± yÃ¼kleniyorâ€¦</div>
 
   <div class="cart-bar hidden" id="cartBar">
     <div>
-      <div class="cart-bar-label">Sepet Toplamý</div>
-      <div class="cart-bar-count" id="cartCount">0 ürün</div>
+      <div class="cart-bar-label">Sepet ToplamÄ±</div>
+      <div class="cart-bar-count" id="cartCount">0 Ã¼rÃ¼n</div>
     </div>
     <div class="cart-bar-total" id="cartTotal">?0,00</div>
   </div>
@@ -187,23 +187,23 @@
     <video id="video" playsinline muted autoplay></video>
     <div class="scan-frame"></div>
     <div class="camera-message" id="cameraMessage">
-      Kamerayý baþlatmak için aþaðýdaki düðmeye bas
+      KamerayÄ± baÅŸlatmak iÃ§in aÅŸaÄŸÄ±daki dÃ¼ÄŸmeye bas
     </div>
   </div>
 
   <div class="row" style="margin-bottom:12px">
-    <button class="btn primary" id="btnStart">?? Kamerayý Baþlat</button>
+    <button class="btn primary" id="btnStart">?? KamerayÄ± BaÅŸlat</button>
     <button class="btn" id="btnStop" disabled>? Durdur</button>
   </div>
 
   <div class="card">
-    <label class="field">Barkodu elle gir (test için)</label>
+    <label class="field">Barkodu elle gir (test iÃ§in)</label>
     <div class="row stack">
       <input type="text" id="manualBarcode" inputmode="numeric" placeholder="8690504009626">
       <button class="btn blue" id="btnManual">Sorgula</button>
     </div>
     <div class="row" style="margin-top:8px">
-      <button class="btn" id="btnDemo">?? Rastgele ürün okut (demo)</button>
+      <button class="btn" id="btnDemo">?? Rastgele Ã¼rÃ¼n okut (demo)</button>
     </div>
   </div>
 
@@ -325,16 +325,16 @@ function showDbStatus(msg, kind){
 }
 
 /* ============================================================
-   ÜRÜN VERÝTABANI
+   ÃœRÃœN VERÄ°TABANI
    ============================================================ */
 async function loadProducts(){
-  showDbStatus('Ürün veritabaný yükleniyor…', null);
+  showDbStatus('ÃœrÃ¼n veritabanÄ± yÃ¼kleniyorâ€¦', null);
   const res = await fetch(CONFIG.productsUrl, { cache: 'no-cache' });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const data = await res.json();
   state.products = data;
   const n = Object.keys(data).length;
-  showDbStatus(`? ${n} ürün yüklendi · hazýr`, 'ok');
+  showDbStatus(`? ${n} Ã¼rÃ¼n yÃ¼klendi Â· hazÄ±r`, 'ok');
 }
 
 /* ============================================================
@@ -343,7 +343,7 @@ async function loadProducts(){
 async function startCamera(){
   if (state.cameraActive) return;
   if (!('BarcodeDetector' in window)){
-    els.cameraMsg.textContent = '?? Bu tarayýcý BarcodeDetector API desteklemiyor. Elle giriþ kullanýn.';
+    els.cameraMsg.textContent = '?? Bu tarayÄ±cÄ± BarcodeDetector API desteklemiyor. Elle giriÅŸ kullanÄ±n.';
     els.cameraMsg.classList.add('error');
     els.cameraMsg.style.display = '';
     return;
@@ -361,10 +361,10 @@ async function startCamera(){
     const wanted = ['ean_13','ean_8','upc_a','upc_e','code_128','code_39','itf'];
     const usable = wanted.filter(f => formats.includes(f));
     if (!usable.length){
-      throw new Error('Bu cihazda desteklenen barkod formatý bulunamadý');
+      throw new Error('Bu cihazda desteklenen barkod formatÄ± bulunamadÄ±');
     }
     state.detector = new BarcodeDetector({ formats: usable });
-    console.log('Desteklenen barkod formatlarý:', usable);
+    console.log('Desteklenen barkod formatlarÄ±:', usable);
 
     state.cameraActive = true;
     els.btnStart.disabled = true;
@@ -376,7 +376,7 @@ async function startCamera(){
     scanLoop();
   }catch(err){
     console.error(err);
-    els.cameraMsg.textContent = '? Kamera açýlamadý: ' + err.message;
+    els.cameraMsg.textContent = '? Kamera aÃ§Ä±lamadÄ±: ' + err.message;
     els.cameraMsg.classList.add('error');
     els.cameraMsg.style.display = '';
   }
@@ -404,12 +404,12 @@ async function scanLoop(){
         handleBarcode(barcodes[0].rawValue);
       }
     }
-  }catch(e){ /* frame atlamasý */ }
+  }catch(e){ /* frame atlamasÄ± */ }
   state.scanRaf = requestAnimationFrame(scanLoop);
 }
 
 /* ============================================================
-   BARKOD ÝÞLEME
+   BARKOD Ä°ÅžLEME
    ============================================================ */
 function handleBarcode(raw){
   const now = Date.now();
@@ -421,7 +421,7 @@ function handleBarcode(raw){
 
 function processBarcode(barcode){
   if (!state.products){
-    showToast('Ürün veritabaný henüz yüklenmedi', 'error');
+    showToast('ÃœrÃ¼n veritabanÄ± henÃ¼z yÃ¼klenmedi', 'error');
     return;
   }
   const product = state.products[barcode];
@@ -442,20 +442,20 @@ function processBarcode(barcode){
     if (state.mode === 'single'){
       renderNotFound(barcode);
     } else {
-      showToast('? Barkod bulunamadý: ' + barcode, 'error');
+      showToast('? Barkod bulunamadÄ±: ' + barcode, 'error');
     }
   }
 }
 
 /* ============================================================
-   TEKLÝ GÖRÜNÜM
+   TEKLÄ° GÃ–RÃœNÃœM
    ============================================================ */
 function renderSingle(barcode, p){
   els.singleResult.innerHTML = `
     <div class="card product-card">
       <div class="product-brand">${escapeHtml(p.brand)}</div>
       <div class="product-name">${escapeHtml(p.name)}</div>
-      <div class="product-cat">${escapeHtml(p.category)} · ${escapeHtml(p.unit)}</div>
+      <div class="product-cat">${escapeHtml(p.category)} Â· ${escapeHtml(p.unit)}</div>
       <div class="product-price">${formatPrice(p.price)}</div>
       <div class="product-meta">
         <div class="stat"><div class="k">Stok</div><div class="v">${p.stock} adet</div></div>
@@ -467,11 +467,11 @@ function renderSingle(barcode, p){
 function renderNotFound(barcode){
   els.singleResult.innerHTML = `
     <div class="card product-card not-found">
-      <div class="product-brand" style="color:var(--danger)">Bulunamadý</div>
-      <div class="product-name">Bu ürün veritabanýnda yok</div>
+      <div class="product-brand" style="color:var(--danger)">BulunamadÄ±</div>
+      <div class="product-name">Bu Ã¼rÃ¼n veritabanÄ±nda yok</div>
       <div class="product-cat">Barkod: <code>${escapeHtml(barcode)}</code></div>
       <div style="color:var(--muted); font-size:12.5px">
-        <code>products.json</code> dosyasýna bu barkodu ekleyerek deneyebilirsin.
+        <code>products.json</code> dosyasÄ±na bu barkodu ekleyerek deneyebilirsin.
       </div>
     </div>`;
 }
@@ -488,7 +488,7 @@ function addToCart(barcode, product){
   saveCart();
   renderCart();
   const total = cartTotals();
-  showToast('? ' + product.name + ' · ' + formatPrice(total.sum), 'success');
+  showToast('? ' + product.name + ' Â· ' + formatPrice(total.sum), 'success');
   setTimeout(() => { state.lastAddedBarcode = null; }, 1200);
 }
 
@@ -502,7 +502,7 @@ function changeQty(barcode, delta){
 
 function clearCart(){
   if (!Object.keys(state.cart).length) return;
-  if (!confirm('Sepeti tamamen temizlemek istediðine emin misin?')) return;
+  if (!confirm('Sepeti tamamen temizlemek istediÄŸine emin misin?')) return;
   state.cart = {};
   saveCart();
   renderCart();
@@ -521,16 +521,16 @@ function renderCart(){
   const entries = Object.entries(state.cart);
 
   const { sum, count } = cartTotals();
-  els.cartCount.textContent = count + ' ürün';
+  els.cartCount.textContent = count + ' Ã¼rÃ¼n';
   els.cartTotal.textContent = formatPrice(sum);
 
   if (!entries.length){
     els.cartList.innerHTML = `
       <div class="empty-cart">
         <div style="font-size:40px; margin-bottom:6px">??</div>
-        <div>Sepetin boþ</div>
+        <div>Sepetin boÅŸ</div>
         <div style="font-size:12px; margin-top:6px">
-          Ürünleri okutmaya baþla, toplam burada birikecek
+          ÃœrÃ¼nleri okutmaya baÅŸla, toplam burada birikecek
         </div>
       </div>`;
     return;
@@ -543,12 +543,12 @@ function renderCart(){
       <div class="cart-item ${hl}">
         <div>
           <div class="cart-item-name">${escapeHtml(it.product.name)}</div>
-          <div class="cart-item-brand">${escapeHtml(it.product.brand)} · ${escapeHtml(it.product.unit)} · ${formatPrice(it.product.price)}</div>
+          <div class="cart-item-brand">${escapeHtml(it.product.brand)} Â· ${escapeHtml(it.product.unit)} Â· ${formatPrice(it.product.price)}</div>
         </div>
         <div class="cart-item-qty">
           <button data-action="dec" data-barcode="${escapeHtml(barcode)}" aria-label="Azalt">-</button>
           <span>${it.qty}</span>
-          <button data-action="inc" data-barcode="${escapeHtml(barcode)}" aria-label="Arttýr">+</button>
+          <button data-action="inc" data-barcode="${escapeHtml(barcode)}" aria-label="ArttÄ±r">+</button>
         </div>
         <div class="cart-item-price">${formatPrice(lineTotal)}</div>
       </div>`;
@@ -582,7 +582,7 @@ function loadCartFromStorage(){
 }
 
 /* ============================================================
-   MOD DEÐÝÞTÝRME
+   MOD DEÄžÄ°ÅžTÄ°RME
    ============================================================ */
 function setMode(mode){
   state.mode = mode;
@@ -626,7 +626,7 @@ function bindEvents(){
 
   els.btnDemo.addEventListener('click', () => {
     if (!state.products || !Object.keys(state.products).length){
-      showToast('Veritabaný boþ', 'error'); return;
+      showToast('VeritabanÄ± boÅŸ', 'error'); return;
     }
     const keys = Object.keys(state.products);
     const bc = keys[Math.floor(Math.random() * keys.length)];
@@ -635,14 +635,14 @@ function bindEvents(){
 
   els.btnClearCart.addEventListener('click', clearCart);
 
-  // Sekme kapanýnca kamerayý durdur
+  // Sekme kapanÄ±nca kamerayÄ± durdur
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && state.cameraActive) stopCamera();
   });
 }
 
 /* ============================================================
-   BAÞLAT
+   BAÅžLAT
    ============================================================ */
 async function init(){
   loadCartFromStorage();
@@ -653,7 +653,7 @@ async function init(){
     await loadProducts();
   }catch(err){
     console.error(err);
-    showDbStatus('? Ürün veritabaný yüklenemedi: ' + err.message, 'error');
+    showDbStatus('? ÃœrÃ¼n veritabanÄ± yÃ¼klenemedi: ' + err.message, 'error');
   }
   if ('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW:', e));
