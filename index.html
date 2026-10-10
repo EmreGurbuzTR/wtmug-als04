@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0b1220">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon-192.svg">
+<title>Barkod Okuyucu · Market</title>
+<style>
+  :root{
+    --bg:#0b1220; --surface:#151d2f; --surface-2:#1e2839; --border:#2a3448;
+    --text:#e7ecf5; --muted:#8f9bb3;
+    --accent:#4ade80; --blue:#60a5fa; --warm:#fb923c; --danger:#f87171;
+    --radius:16px;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body{
+    margin:0; background:var(--bg); color:var(--text); min-height:100dvh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:15px; padding-bottom:calc(24px + env(safe-area-inset-bottom));
+  }
+  header{
+    padding:calc(14px + env(safe-area-inset-top)) 16px 0;
+    background:linear-gradient(180deg,#16213a,#0b1220);
+    border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:20;
+  }
+  header h1{ margin:0; font-size:17px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  header .sub{ color:var(--muted); font-size:12px; margin:3px 0 12px; }
+  .mode-toggle{
+    display:flex; background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:4px; margin-bottom:12px;
+  }
+  .mode-toggle button{
+    flex:1; background:transparent; border:0; color:var(--muted);
+    padding:9px 10px; border-radius:9px; font-size:13px; font-weight:700;
+    cursor:pointer; transition:.15s;
+  }
+  .mode-toggle button.active{ background:var(--accent); color:#06210f; }
+
+  main{ padding:14px 16px 0; }
+
+  .db-status{
+    font-size:12px; padding:8px 12px; border-radius:10px; margin-bottom:12px;
+    background:var(--surface); border:1px solid var(--border); color:var(--muted);
+    text-align:center;
+  }
+  .db-status.ok{ color:var(--accent); border-color:rgba(74,222,128,.35); }
+  .db-status.error{ color:var(--danger); border-color:rgba(248,113,113,.35); }
+
+  .cart-bar{
+    display:flex; justify-content:space-between; align-items:center;
+    background:linear-gradient(135deg,#4ade80,#22d3ee);
+    color:#06210f; padding:14px 16px; border-radius:14px; margin-bottom:12px;
+    box-shadow:0 6px 20px rgba(74,222,128,.25);
+  }
+  .cart-bar.hidden{ display:none; }
+  .cart-bar-label{ font-size:11px; font-weight:700; opacity:.75; text-transform:uppercase; letter-spacing:.4px; }
+  .cart-bar-count{ font-size:12px; font-weight:600; margin-top:2px; }
+  .cart-bar-total{ font-size:24px; font-weight:800; letter-spacing:-.5px; }
+
+  .camera-wrap{
+    position:relative; width:100%; aspect-ratio:4/3;
+    background:#000; border-radius:16px; overflow:hidden;
+    margin-bottom:12px; transition:.2s;
+  }
+  .camera-wrap video{ width:100%; height:100%; object-fit:cover; display:block; }
+  .scan-frame{
+    position:absolute; top:20%; left:8%; right:8%; bottom:20%;
+    border:2px solid rgba(74,222,128,.85); border-radius:14px;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.35);
+    pointer-events:none; display:none;
+  }
+  .camera-wrap.active .scan-frame{ display:block; }
+  .camera-message{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:#8f9bb3; font-size:13px; text-align:center; padding:20px; font-weight:600;
+  }
+  .camera-message.error{ color:var(--danger); }
+  .camera-wrap.flash-success{ box-shadow:0 0 0 4px var(--accent), 0 0 30px rgba(74,222,128,.6); }
+  .camera-wrap.flash-error{ box-shadow:0 0 0 4px var(--danger), 0 0 30px rgba(248,113,113,.6); }
+
+  .row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .row.stack{ flex-wrap:nowrap; }
+  button.btn{
+    flex:1 1 auto; min-width:96px;
+    background:var(--surface-2); color:var(--text); border:1px solid var(--border);
+    padding:12px 14px; border-radius:11px; font-size:13.5px; font-weight:600;
+    cursor:pointer; transition:.15s; touch-action:manipulation;
+  }
+  button.btn:active{ transform:scale(.97); }
+  button.btn.primary{ background:var(--accent); color:#06210f; border-color:var(--accent); }
+  button.btn.blue{ background:var(--blue); color:#04162b; border-color:var(--blue); }
+  button.btn.danger{ background:var(--danger); color:#2a0505; border-color:var(--danger); }
+  button.btn:disabled{ opacity:.4; }
+
+  input[type=text]{
+    flex:1; background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    padding:12px 14px; border-radius:11px; font-size:14px; font-family:ui-monospace,monospace;
+  }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:14px; margin-bottom:12px;
+  }
+  label.field{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:600; }
+  .card h2{ margin:0 0 4px; font-size:15px; font-weight:700; }
+
+  .product-card{ animation:pop .25s ease; }
+  @keyframes pop{ from{ transform:scale(.96); opacity:.6; } to{ transform:scale(1); opacity:1; } }
+  .product-card.not-found{ border-color:var(--danger); }
+  .product-brand{ color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+  .product-name{ font-size:20px; font-weight:800; margin:4px 0 6px; line-height:1.25; }
+  .product-cat{ color:var(--muted); font-size:12.5px; margin-bottom:14px; }
+  .product-price{
+    font-size:38px; font-weight:800; letter-spacing:-1.5px;
+    background:linear-gradient(135deg,var(--accent),#22d3ee);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    margin:6px 0 14px;
+  }
+  .product-meta{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .stat{ background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:8px 10px; }
+  .stat .k{ color:var(--muted); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+  .stat .v{ font-size:14px; font-weight:700; margin-top:3px; word-break:break-all; }
+
+  .cart-item{
+    display:grid; grid-template-columns:1fr auto auto; gap:10px; align-items:center;
+    padding:10px 0; border-bottom:1px solid var(--border);
+  }
+  .cart-item:last-child{ border-bottom:0; }
+  .cart-item.highlight{ animation:highlight .8s ease; }
+  @keyframes highlight{ 0%{ background:rgba(74,222,128,.25); } 100%{ background:transparent; } }
+  .cart-item-name{ font-size:13.5px; font-weight:600; line-height:1.3; }
+  .cart-item-brand{ font-size:11px; color:var(--muted); margin-top:2px; }
+  .cart-item-qty{
+    display:flex; align-items:center; gap:6px;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:3px;
+  }
+  .cart-item-qty button{
+    width:26px; height:26px; border-radius:6px; background:transparent; color:var(--text);
+    border:0; font-size:16px; font-weight:800; cursor:pointer; line-height:1;
+  }
+  .cart-item-qty button:active{ background:var(--border); }
+  .cart-item-qty span{ min-width:18px; text-align:center; font-weight:700; font-size:13px; }
+  .cart-item-price{ font-size:14px; font-weight:800; min-width:66px; text-align:right; }
+
+  .empty-cart{ text-align:center; padding:24px 12px; color:var(--muted); font-size:13px; }
+
+  .toast{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:calc(24px + env(safe-area-inset-bottom));
+    background:var(--surface); border:1px solid var(--border); color:var(--text);
+    padding:11px 16px; border-radius:999px; font-size:13px; font-weight:600;
+    box-shadow:0 8px 24px rgba(0,0,0,.35); z-index:100;
+    opacity:0; pointer-events:none; transition:.25s;
+  }
+  .toast.show{ opacity:1; }
+  .toast.error{ background:var(--danger); color:#2a0505; border-color:var(--danger); }
+  .toast.success{ background:var(--accent); color:#06210f; border-color:var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>?? Barkod Okuyucu</h1>
+  <div class="sub">Market fiyat kontrol · PWA Laboratuvarý</div>
+  <div class="mode-toggle" id="modeToggle">
+    <button data-mode="single" class="active">?? Tekli Sorgu</button>
+    <button data-mode="cart">??? Sepet Modu</button>
+  </div>
+</header>
+
+<main>
+  <div class="db-status" id="dbStatus">Ürün veritabaný yükleniyor…</div>
+
+  <div class="cart-bar hidden" id="cartBar">
+    <div>
+      <div class="cart-bar-label">Sepet Toplamý</div>
+      <div class="cart-bar-count" id="cartCount">0 ürün</div>
+    </div>
+    <div class="cart-bar-total" id="cartTotal">?0,00</div>
+  </div>
+
+  <div class="camera-wrap" id="cameraWrap">
+    <video id="video" playsinline muted autoplay></video>
+    <div class="scan-frame"></div>
+    <div class="camera-message" id="cameraMessage">
+      Kamerayý baþlatmak için aþaðýdaki düðmeye bas
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom:12px">
+    <button class="btn primary" id="btnStart">?? Kamerayý Baþlat</button>
+    <button class="btn" id="btnStop" disabled>? Durdur</button>
+  </div>
+
+  <div class="card">
+    <label class="field">Barkodu elle gir (test için)</label>
+    <div class="row stack">
+      <input type="text" id="manualBarcode" inputmode="numeric" placeholder="8690504009626">
+      <button class="btn blue" id="btnManual">Sorgula</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="btnDemo">?? Rastgele ürün okut (demo)</button>
+    </div>
+  </div>
+
+  <section id="singlePanel">
+    <div id="singleResult"></div>
+  </section>
+
+  <section id="cartPanel" class="hidden">
+    <div class="card">
+      <h2 style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span>??? Sepetim</span>
+        <button class="btn danger" id="btnClearCart"
+          style="flex:0;min-width:auto;padding:6px 12px;font-size:12px">??? Temizle</button>
+      </h2>
+      <div id="cartList"></div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const CONFIG = {
+  productsUrl: 'products.json',
+  debounceMs: 1500,
+  beepSuccess: 1050,
+  beepError: 220,
+  vibrateSuccess: [25],
+  vibrateError: [90, 40, 90]
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  mode: 'single',
+  cameraActive: false,
+  products: null,
+  cart: {},
+  lastBarcode: null,
+  lastScanTime: 0,
+  lastAddedBarcode: null,
+  detector: null,
+  stream: null,
+  scanRaf: null,
+  audioCtx: null
+};
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const els = {
+  modeToggle:   $('#modeToggle'),
+  dbStatus:     $('#dbStatus'),
+  cartBar:      $('#cartBar'),
+  cartCount:    $('#cartCount'),
+  cartTotal:    $('#cartTotal'),
+  cameraWrap:   $('#cameraWrap'),
+  video:        $('#video'),
+  cameraMsg:    $('#cameraMessage'),
+  btnStart:     $('#btnStart'),
+  btnStop:      $('#btnStop'),
+  manualInput:  $('#manualBarcode'),
+  btnManual:    $('#btnManual'),
+  btnDemo:      $('#btnDemo'),
+  singlePanel:  $('#singlePanel'),
+  cartPanel:    $('#cartPanel'),
+  singleResult: $('#singleResult'),
+  cartList:     $('#cartList'),
+  btnClearCart: $('#btnClearCart'),
+  toast:        $('#toast')
+};
+
+/* ============================================================
+   YARDIMCILAR
+   ============================================================ */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function formatPrice(n){
+  return new Intl.NumberFormat('tr-TR', { style:'currency', currency:'TRY' }).format(n);
+}
+function showToast(msg, kind='success'){
+  els.toast.textContent = msg;
+  els.toast.className = 'toast show ' + kind;
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => els.toast.classList.remove('show'), 2200);
+}
+function beep(freq = 880, duration = 0.09){
+  try{
+    if (!state.audioCtx) state.audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if (state.audioCtx.state === 'suspended') state.audioCtx.resume();
+    const t = state.audioCtx.currentTime;
+    const osc = state.audioCtx.createOscillator();
+    const g = state.audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(0.18, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+    osc.connect(g).connect(state.audioCtx.destination);
+    osc.start(t); osc.stop(t + duration + 0.02);
+  }catch(e){ /* sessiz */ }
+}
+function vibrate(pattern){ if (navigator.vibrate) navigator.vibrate(pattern); }
+function flashCamera(kind){
+  const cls = 'flash-' + kind;
+  els.cameraWrap.classList.add(cls);
+  setTimeout(() => els.cameraWrap.classList.remove(cls), 320);
+}
+function showDbStatus(msg, kind){
+  els.dbStatus.textContent = msg;
+  els.dbStatus.className = 'db-status' + (kind ? ' ' + kind : '');
+}
+
+/* ============================================================
+   ÜRÜN VERÝTABANI
+   ============================================================ */
+async function loadProducts(){
+  showDbStatus('Ürün veritabaný yükleniyor…', null);
+  const res = await fetch(CONFIG.productsUrl, { cache: 'no-cache' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  state.products = data;
+  const n = Object.keys(data).length;
+  showDbStatus(`? ${n} ürün yüklendi · hazýr`, 'ok');
+}
+
+/* ============================================================
+   KAMERA
+   ============================================================ */
+async function startCamera(){
+  if (state.cameraActive) return;
+  if (!('BarcodeDetector' in window)){
+    els.cameraMsg.textContent = '?? Bu tarayýcý BarcodeDetector API desteklemiyor. Elle giriþ kullanýn.';
+    els.cameraMsg.classList.add('error');
+    els.cameraMsg.style.display = '';
+    return;
+  }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    });
+    state.stream = stream;
+    els.video.srcObject = stream;
+    await els.video.play();
+
+    const formats = await BarcodeDetector.getSupportedFormats();
+    const wanted = ['ean_13','ean_8','upc_a','upc_e','code_128','code_39','itf'];
+    const usable = wanted.filter(f => formats.includes(f));
+    if (!usable.length){
+      throw new Error('Bu cihazda desteklenen barkod formatý bulunamadý');
+    }
+    state.detector = new BarcodeDetector({ formats: usable });
+    console.log('Desteklenen barkod formatlarý:', usable);
+
+    state.cameraActive = true;
+    els.btnStart.disabled = true;
+    els.btnStop.disabled = false;
+    els.cameraMsg.style.display = 'none';
+    els.cameraMsg.classList.remove('error');
+    els.cameraWrap.classList.add('active');
+
+    scanLoop();
+  }catch(err){
+    console.error(err);
+    els.cameraMsg.textContent = '? Kamera açýlamadý: ' + err.message;
+    els.cameraMsg.classList.add('error');
+    els.cameraMsg.style.display = '';
+  }
+}
+
+function stopCamera(){
+  state.cameraActive = false;
+  if (state.scanRaf){ cancelAnimationFrame(state.scanRaf); state.scanRaf = null; }
+  if (state.stream){ state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
+  els.video.srcObject = null;
+  els.btnStart.disabled = false;
+  els.btnStop.disabled = true;
+  els.cameraMsg.style.display = '';
+  els.cameraMsg.classList.remove('error');
+  els.cameraMsg.textContent = 'Kamera durduruldu';
+  els.cameraWrap.classList.remove('active');
+}
+
+async function scanLoop(){
+  if (!state.cameraActive || !state.detector) return;
+  try{
+    if (els.video.readyState === els.video.HAVE_ENOUGH_DATA){
+      const barcodes = await state.detector.detect(els.video);
+      if (barcodes.length > 0){
+        handleBarcode(barcodes[0].rawValue);
+      }
+    }
+  }catch(e){ /* frame atlamasý */ }
+  state.scanRaf = requestAnimationFrame(scanLoop);
+}
+
+/* ============================================================
+   BARKOD ÝÞLEME
+   ============================================================ */
+function handleBarcode(raw){
+  const now = Date.now();
+  if (raw === state.lastBarcode && now - state.lastScanTime < CONFIG.debounceMs) return;
+  state.lastBarcode = raw;
+  state.lastScanTime = now;
+  processBarcode(raw);
+}
+
+function processBarcode(barcode){
+  if (!state.products){
+    showToast('Ürün veritabaný henüz yüklenmedi', 'error');
+    return;
+  }
+  const product = state.products[barcode];
+
+  if (product){
+    beep(CONFIG.beepSuccess);
+    vibrate(CONFIG.vibrateSuccess);
+    flashCamera('success');
+    if (state.mode === 'single'){
+      renderSingle(barcode, product);
+    } else {
+      addToCart(barcode, product);
+    }
+  } else {
+    beep(CONFIG.beepError, 0.2);
+    vibrate(CONFIG.vibrateError);
+    flashCamera('error');
+    if (state.mode === 'single'){
+      renderNotFound(barcode);
+    } else {
+      showToast('? Barkod bulunamadý: ' + barcode, 'error');
+    }
+  }
+}
+
+/* ============================================================
+   TEKLÝ GÖRÜNÜM
+   ============================================================ */
+function renderSingle(barcode, p){
+  els.singleResult.innerHTML = `
+    <div class="card product-card">
+      <div class="product-brand">${escapeHtml(p.brand)}</div>
+      <div class="product-name">${escapeHtml(p.name)}</div>
+      <div class="product-cat">${escapeHtml(p.category)} · ${escapeHtml(p.unit)}</div>
+      <div class="product-price">${formatPrice(p.price)}</div>
+      <div class="product-meta">
+        <div class="stat"><div class="k">Stok</div><div class="v">${p.stock} adet</div></div>
+        <div class="stat"><div class="k">Barkod</div><div class="v" style="font-size:11px">${escapeHtml(barcode)}</div></div>
+      </div>
+    </div>`;
+}
+
+function renderNotFound(barcode){
+  els.singleResult.innerHTML = `
+    <div class="card product-card not-found">
+      <div class="product-brand" style="color:var(--danger)">Bulunamadý</div>
+      <div class="product-name">Bu ürün veritabanýnda yok</div>
+      <div class="product-cat">Barkod: <code>${escapeHtml(barcode)}</code></div>
+      <div style="color:var(--muted); font-size:12.5px">
+        <code>products.json</code> dosyasýna bu barkodu ekleyerek deneyebilirsin.
+      </div>
+    </div>`;
+}
+
+/* ============================================================
+   SEPET
+   ============================================================ */
+function addToCart(barcode, product){
+  if (!state.cart[barcode]){
+    state.cart[barcode] = { product, qty: 0 };
+  }
+  state.cart[barcode].qty += 1;
+  state.lastAddedBarcode = barcode;
+  saveCart();
+  renderCart();
+  const total = cartTotals();
+  showToast('? ' + product.name + ' · ' + formatPrice(total.sum), 'success');
+  setTimeout(() => { state.lastAddedBarcode = null; }, 1200);
+}
+
+function changeQty(barcode, delta){
+  if (!state.cart[barcode]) return;
+  state.cart[barcode].qty += delta;
+  if (state.cart[barcode].qty <= 0) delete state.cart[barcode];
+  saveCart();
+  renderCart();
+}
+
+function clearCart(){
+  if (!Object.keys(state.cart).length) return;
+  if (!confirm('Sepeti tamamen temizlemek istediðine emin misin?')) return;
+  state.cart = {};
+  saveCart();
+  renderCart();
+}
+
+function cartTotals(){
+  let sum = 0, count = 0;
+  for (const it of Object.values(state.cart)){
+    sum += it.product.price * it.qty;
+    count += it.qty;
+  }
+  return { sum, count };
+}
+
+function renderCart(){
+  const entries = Object.entries(state.cart);
+
+  const { sum, count } = cartTotals();
+  els.cartCount.textContent = count + ' ürün';
+  els.cartTotal.textContent = formatPrice(sum);
+
+  if (!entries.length){
+    els.cartList.innerHTML = `
+      <div class="empty-cart">
+        <div style="font-size:40px; margin-bottom:6px">??</div>
+        <div>Sepetin boþ</div>
+        <div style="font-size:12px; margin-top:6px">
+          Ürünleri okutmaya baþla, toplam burada birikecek
+        </div>
+      </div>`;
+    return;
+  }
+
+  const html = entries.map(([barcode, it]) => {
+    const lineTotal = it.product.price * it.qty;
+    const hl = barcode === state.lastAddedBarcode ? 'highlight' : '';
+    return `
+      <div class="cart-item ${hl}">
+        <div>
+          <div class="cart-item-name">${escapeHtml(it.product.name)}</div>
+          <div class="cart-item-brand">${escapeHtml(it.product.brand)} · ${escapeHtml(it.product.unit)} · ${formatPrice(it.product.price)}</div>
+        </div>
+        <div class="cart-item-qty">
+          <button data-action="dec" data-barcode="${escapeHtml(barcode)}" aria-label="Azalt">-</button>
+          <span>${it.qty}</span>
+          <button data-action="inc" data-barcode="${escapeHtml(barcode)}" aria-label="Arttýr">+</button>
+        </div>
+        <div class="cart-item-price">${formatPrice(lineTotal)}</div>
+      </div>`;
+  }).join('');
+
+  els.cartList.innerHTML = html;
+
+  els.cartList.querySelectorAll('button[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const bc = btn.dataset.barcode;
+      const d = btn.dataset.action === 'inc' ? 1 : -1;
+      changeQty(bc, d);
+    });
+  });
+}
+
+function saveCart(){
+  try{
+    const slim = {};
+    for (const [bc, it] of Object.entries(state.cart)){
+      slim[bc] = { qty: it.qty, product: it.product };
+    }
+    localStorage.setItem('barkod-sepet', JSON.stringify(slim));
+  }catch(e){}
+}
+function loadCartFromStorage(){
+  try{
+    const raw = localStorage.getItem('barkod-sepet');
+    if (raw) state.cart = JSON.parse(raw) || {};
+  }catch(e){ state.cart = {}; }
+}
+
+/* ============================================================
+   MOD DEÐÝÞTÝRME
+   ============================================================ */
+function setMode(mode){
+  state.mode = mode;
+  els.modeToggle.querySelectorAll('button').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  if (mode === 'single'){
+    els.singlePanel.classList.remove('hidden');
+    els.cartPanel.classList.add('hidden');
+    els.cartBar.classList.add('hidden');
+  } else {
+    els.singlePanel.classList.add('hidden');
+    els.cartPanel.classList.remove('hidden');
+    els.cartBar.classList.remove('hidden');
+    renderCart();
+  }
+}
+
+/* ============================================================
+   OLAYLAR
+   ============================================================ */
+function bindEvents(){
+  els.modeToggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-mode]');
+    if (!btn) return;
+    setMode(btn.dataset.mode);
+  });
+
+  els.btnStart.addEventListener('click', () => { beep(660, 0.05); startCamera(); });
+  els.btnStop.addEventListener('click', stopCamera);
+
+  els.btnManual.addEventListener('click', () => {
+    const v = els.manualInput.value.trim();
+    if (!v) return;
+    els.manualInput.value = '';
+    handleBarcode(v);
+  });
+  els.manualInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter'){ e.preventDefault(); els.btnManual.click(); }
+  });
+
+  els.btnDemo.addEventListener('click', () => {
+    if (!state.products || !Object.keys(state.products).length){
+      showToast('Veritabaný boþ', 'error'); return;
+    }
+    const keys = Object.keys(state.products);
+    const bc = keys[Math.floor(Math.random() * keys.length)];
+    handleBarcode(bc);
+  });
+
+  els.btnClearCart.addEventListener('click', clearCart);
+
+  // Sekme kapanýnca kamerayý durdur
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && state.cameraActive) stopCamera();
+  });
+}
+
+/* ============================================================
+   BAÞLAT
+   ============================================================ */
+async function init(){
+  loadCartFromStorage();
+  bindEvents();
+  setMode('single');
+  renderCart();
+  try{
+    await loadProducts();
+  }catch(err){
+    console.error(err);
+    showDbStatus('? Ürün veritabaný yüklenemedi: ' + err.message, 'error');
+  }
+  if ('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW:', e));
+  }
+}
+init();
+</script>
+</body>
+</html>
