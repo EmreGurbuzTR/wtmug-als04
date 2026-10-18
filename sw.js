@@ -1,6 +1,6 @@
-/* Barkod Okuyucu PWA — Service Worker
+ï»¿/* Barkod Okuyucu PWA â€” Service Worker
    - App shell: cache-first
-   - products.json: network-first (güncel kalsýn), çevrimdýþýysa cache
+   - products.json: network-first (gÃ¼ncel kalsÄ±n), Ã§evrimdÄ±ÅŸÄ±ysa cache
 */
 const CACHE = 'barkod-pwa-v1';
 const PRECACHE = [
@@ -27,9 +27,9 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
-  if (url.origin !== location.origin) return; // dýþ istekleri karýþtýrma
+  if (url.origin !== location.origin) return; // dÄ±ÅŸ istekleri karÄ±ÅŸtÄ±rma
 
-  // products.json için network-first
+  // products.json iÃ§in network-first
   if (url.pathname.endsWith('products.json')){
     e.respondWith(
       fetch(req).then(res => {
@@ -41,7 +41,7 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Diðer her þey için cache-first
+  // DiÄŸer her ÅŸey iÃ§in cache-first
   e.respondWith(
     caches.match(req).then(cached => {
       if (cached) return cached;
