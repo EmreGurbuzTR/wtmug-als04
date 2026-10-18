@@ -1,4 +1,4 @@
-#Barkod Okuyucu PWA
+## Barkod Okuyucu PWA
 
 Market ürünlerinin **barkodunu** telefon kamerasýyla okutup,
 iki farklý modda fiyat kontrolü yapan PWA.
