@@ -1,104 +1,104 @@
-{
+ï»¿{
   "8690504009626": {
-    "name": "Tam Yaðlý Süt 1 L",
-    "brand": "XYZsüt",
-    "category": "Süt & Kahvaltýlýk",
+    "name": "Tam YaÄŸlÄ± SÃ¼t 1 L",
+    "brand": "XYZsÃ¼t",
+    "category": "SÃ¼t & KahvaltÄ±lÄ±k",
     "price": 42.50,
     "unit": "1 L",
     "stock": 24
   },
   "8690504001064": {
-    "name": "Yarým Yaðlý Süt 1 L",
-    "brand": "XYZsüt",
-    "category": "Süt & Kahvaltýlýk",
+    "name": "YarÄ±m YaÄŸlÄ± SÃ¼t 1 L",
+    "brand": "XYZsÃ¼t",
+    "category": "SÃ¼t & KahvaltÄ±lÄ±k",
     "price": 39.75,
     "unit": "1 L",
     "stock": 18
   },
   "8690504020225": {
-    "name": "Kaþar Peyniri 400 g",
-    "brand": "XYZsüt",
-    "category": "Süt & Kahvaltýlýk",
+    "name": "KaÅŸar Peyniri 400 g",
+    "brand": "XYZsÃ¼t",
+    "category": "SÃ¼t & KahvaltÄ±lÄ±k",
     "price": 145.00,
     "unit": "400 g",
     "stock": 22
   },
   "8690504030000": {
     "name": "Beyaz Peynir 500 g",
-    "brand": "XYZsüt",
-    "category": "Süt & Kahvaltýlýk",
+    "brand": "XYZsÃ¼t",
+    "category": "SÃ¼t & KahvaltÄ±lÄ±k",
     "price": 110.00,
     "unit": "500 g",
     "stock": 20
   },
   "8690504025000": {
-    "name": "Tereyaðý 250 g",
-    "brand": "XYZsüt",
-    "category": "Süt & Kahvaltýlýk",
+    "name": "TereyaÄŸÄ± 250 g",
+    "brand": "XYZsÃ¼t",
+    "category": "SÃ¼t & KahvaltÄ±lÄ±k",
     "price": 125.00,
     "unit": "250 g",
     "stock": 14
   },
   "8690504012345": {
-    "name": "Yoðurt 1 kg",
-    "brand": "XYZsüt",
-    "category": "Süt & Kahvaltýlýk",
+    "name": "YoÄŸurt 1 kg",
+    "brand": "XYZsÃ¼t",
+    "category": "SÃ¼t & KahvaltÄ±lÄ±k",
     "price": 65.00,
     "unit": "1 kg",
     "stock": 30
   },
   "8690637002328": {
-    "name": "Çikolatalý Gofret 36 g",
-    "brand": "KLM Gýda",
-    "category": "Atýþtýrmalýk",
+    "name": "Ã‡ikolatalÄ± Gofret 36 g",
+    "brand": "KLM GÄ±da",
+    "category": "AtÄ±ÅŸtÄ±rmalÄ±k",
     "price": 12.00,
     "unit": "36 g",
     "stock": 120
   },
   "8690637026010": {
-    "name": "Sütlü Çikolata 60 g",
-    "brand": "KLM Gýda",
-    "category": "Atýþtýrmalýk",
+    "name": "SÃ¼tlÃ¼ Ã‡ikolata 60 g",
+    "brand": "KLM GÄ±da",
+    "category": "AtÄ±ÅŸtÄ±rmalÄ±k",
     "price": 22.00,
     "unit": "60 g",
     "stock": 88
   },
   "8690504013562": {
-    "name": "Burçak Bisküvi 131 g",
-    "brand": "STU Gýda",
-    "category": "Atýþtýrmalýk",
+    "name": "BurÃ§ak BiskÃ¼vi 131 g",
+    "brand": "STU GÄ±da",
+    "category": "AtÄ±ÅŸtÄ±rmalÄ±k",
     "price": 18.50,
     "unit": "131 g",
     "stock": 56
   },
   "8690627003014": {
-    "name": "Kavrulmuþ Fýndýk 200 g",
-    "brand": "FGH Kuruyemiþ",
-    "category": "Kuruyemiþ",
+    "name": "KavrulmuÅŸ FÄ±ndÄ±k 200 g",
+    "brand": "FGH KuruyemiÅŸ",
+    "category": "KuruyemiÅŸ",
     "price": 89.90,
     "unit": "200 g",
     "stock": 32
   },
   "8690575000017": {
-    "name": "Ayçiçek Yaðý 5 L",
-    "brand": "BNM Yað",
-    "category": "Yað & Sos",
+    "name": "AyÃ§iÃ§ek YaÄŸÄ± 5 L",
+    "brand": "BNM YaÄŸ",
+    "category": "YaÄŸ & Sos",
     "price": 189.00,
     "unit": "5 L",
     "stock": 15
   },
   "8690575004350": {
-    "name": "Zeytinyaðý 1 L",
-    "brand": "GHJ Yað",
-    "category": "Yað & Sos",
+    "name": "ZeytinyaÄŸÄ± 1 L",
+    "brand": "GHJ YaÄŸ",
+    "category": "YaÄŸ & Sos",
     "price": 265.00,
     "unit": "1 L",
     "stock": 8
   },
   "8690575006789": {
-    "name": "Salça 700 g",
-    "brand": "TYU Salça",
-    "category": "Yað & Sos",
+    "name": "SalÃ§a 700 g",
+    "brand": "TYU SalÃ§a",
+    "category": "YaÄŸ & Sos",
     "price": 55.00,
     "unit": "700 g",
     "stock": 40
@@ -106,15 +106,15 @@
   "8690575007890": {
     "name": "Spagetti Makarna 500 g",
     "brand": "MKR Makarna",
-    "category": "Temel Gýda",
+    "category": "Temel GÄ±da",
     "price": 28.50,
     "unit": "500 g",
     "stock": 100
   },
   "8690123456789": {
-    "name": "Baldo Pirinç 1 kg",
+    "name": "Baldo PirinÃ§ 1 kg",
     "brand": "HGF Bakliyat",
-    "category": "Temel Gýda",
+    "category": "Temel GÄ±da",
     "price": 62.00,
     "unit": "1 kg",
     "stock": 50
