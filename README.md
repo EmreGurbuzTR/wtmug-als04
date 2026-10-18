@@ -1,11 +1,11 @@
-# ?? Barkod Okuyucu PWA
+#Barkod Okuyucu PWA
 
 Market ürünlerinin **barkodunu** telefon kamerasýyla okutup,
 iki farklý modda fiyat kontrolü yapan PWA.
 
 ## Modlar
-- ?? **Tekli Sorgu:** Bir barkod okut › ürün adý, marka, kategori, fiyat, stok.
-- ??? **Sepet Modu:** Birden fazla ürün okut › çalýþan toplam. Kasada sürpriz yok.
+- **Tekli Sorgu:** Bir barkod okut › ürün adý, marka, kategori, fiyat, stok.
+- **Sepet Modu:** Birden fazla ürün okut › çalýþan toplam. Kasada sürpriz yok.
 
 ## Kullanýlan Web API'leri
 - **`getUserMedia`** — arka kamera eriþimi
