@@ -164,11 +164,11 @@
 <body>
 
 <header>
-  <h1>?? Barkod Okuyucu</h1>
+  <h1>Barkod Okuyucu</h1>
   <div class="sub">Market fiyat kontrol · PWA Laboratuvarı</div>
   <div class="mode-toggle" id="modeToggle">
-    <button data-mode="single" class="active">?? Tekli Sorgu</button>
-    <button data-mode="cart">??? Sepet Modu</button>
+    <button data-mode="single" class="active">Tekli Sorgu</button>
+    <button data-mode="cart">Sepet Modu</button>
   </div>
 </header>
 
@@ -180,7 +180,7 @@
       <div class="cart-bar-label">Sepet Toplamı</div>
       <div class="cart-bar-count" id="cartCount">0 ürün</div>
     </div>
-    <div class="cart-bar-total" id="cartTotal">?0,00</div>
+    <div class="cart-bar-total" id="cartTotal">0,00</div>
   </div>
 
   <div class="camera-wrap" id="cameraWrap">
@@ -192,8 +192,8 @@
   </div>
 
   <div class="row" style="margin-bottom:12px">
-    <button class="btn primary" id="btnStart">?? Kamerayı Başlat</button>
-    <button class="btn" id="btnStop" disabled>? Durdur</button>
+    <button class="btn primary" id="btnStart">Kamerayı Başlat</button>
+    <button class="btn" id="btnStop" disabled>Durdur</button>
   </div>
 
   <div class="card">
@@ -203,7 +203,7 @@
       <button class="btn blue" id="btnManual">Sorgula</button>
     </div>
     <div class="row" style="margin-top:8px">
-      <button class="btn" id="btnDemo">?? Rastgele ürün okut (demo)</button>
+      <button class="btn" id="btnDemo">Rastgele ürün okut (demo)</button>
     </div>
   </div>
 
@@ -214,9 +214,9 @@
   <section id="cartPanel" class="hidden">
     <div class="card">
       <h2 style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span>??? Sepetim</span>
+        <span>Sepetim</span>
         <button class="btn danger" id="btnClearCart"
-          style="flex:0;min-width:auto;padding:6px 12px;font-size:12px">??? Temizle</button>
+          style="flex:0;min-width:auto;padding:6px 12px;font-size:12px">Temizle</button>
       </h2>
       <div id="cartList"></div>
     </div>
@@ -334,7 +334,7 @@ async function loadProducts(){
   const data = await res.json();
   state.products = data;
   const n = Object.keys(data).length;
-  showDbStatus(`? ${n} ürün yüklendi · hazır`, 'ok');
+  showDbStatus(`${n} ürün yüklendi · hazır`, 'ok');
 }
 
 /* ============================================================
@@ -343,7 +343,7 @@ async function loadProducts(){
 async function startCamera(){
   if (state.cameraActive) return;
   if (!('BarcodeDetector' in window)){
-    els.cameraMsg.textContent = '?? Bu tarayıcı BarcodeDetector API desteklemiyor. Elle giriş kullanın.';
+    els.cameraMsg.textContent = 'Bu tarayıcı BarcodeDetector API desteklemiyor. Elle giriş kullanın.';
     els.cameraMsg.classList.add('error');
     els.cameraMsg.style.display = '';
     return;
@@ -376,7 +376,7 @@ async function startCamera(){
     scanLoop();
   }catch(err){
     console.error(err);
-    els.cameraMsg.textContent = '? Kamera açılamadı: ' + err.message;
+    els.cameraMsg.textContent = 'Kamera açılamadı: ' + err.message;
     els.cameraMsg.classList.add('error');
     els.cameraMsg.style.display = '';
   }
@@ -442,7 +442,7 @@ function processBarcode(barcode){
     if (state.mode === 'single'){
       renderNotFound(barcode);
     } else {
-      showToast('? Barkod bulunamadı: ' + barcode, 'error');
+      showToast('Barkod bulunamadı: ' + barcode, 'error');
     }
   }
 }
@@ -488,7 +488,7 @@ function addToCart(barcode, product){
   saveCart();
   renderCart();
   const total = cartTotals();
-  showToast('? ' + product.name + ' · ' + formatPrice(total.sum), 'success');
+  showToast(product.name + ' · ' + formatPrice(total.sum), 'success');
   setTimeout(() => { state.lastAddedBarcode = null; }, 1200);
 }
 
@@ -527,7 +527,7 @@ function renderCart(){
   if (!entries.length){
     els.cartList.innerHTML = `
       <div class="empty-cart">
-        <div style="font-size:40px; margin-bottom:6px">??</div>
+        <div style="font-size:40px; margin-bottom:6px"></div>
         <div>Sepetin boş</div>
         <div style="font-size:12px; margin-top:6px">
           Ürünleri okutmaya başla, toplam burada birikecek
@@ -653,7 +653,7 @@ async function init(){
     await loadProducts();
   }catch(err){
     console.error(err);
-    showDbStatus('? Ürün veritabanı yüklenemedi: ' + err.message, 'error');
+    showDbStatus('Ürün veritabanı yüklenemedi: ' + err.message, 'error');
   }
   if ('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW:', e));
