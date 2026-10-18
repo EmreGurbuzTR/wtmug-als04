@@ -1,7 +1,7 @@
 {
   "8690504009626": {
     "name": "Tam Yaðlý Süt 1 L",
-    "brand": "Sütaþ",
+    "brand": "XYZsüt",
     "category": "Süt & Kahvaltýlýk",
     "price": 42.50,
     "unit": "1 L",
@@ -9,7 +9,7 @@
   },
   "8690504001064": {
     "name": "Yarým Yaðlý Süt 1 L",
-    "brand": "Sütaþ",
+    "brand": "XYZsüt",
     "category": "Süt & Kahvaltýlýk",
     "price": 39.75,
     "unit": "1 L",
@@ -17,7 +17,7 @@
   },
   "8690504020225": {
     "name": "Kaþar Peyniri 400 g",
-    "brand": "Sütaþ",
+    "brand": "XYZsüt",
     "category": "Süt & Kahvaltýlýk",
     "price": 145.00,
     "unit": "400 g",
@@ -25,7 +25,7 @@
   },
   "8690504030000": {
     "name": "Beyaz Peynir 500 g",
-    "brand": "Sütaþ",
+    "brand": "XYZsüt",
     "category": "Süt & Kahvaltýlýk",
     "price": 110.00,
     "unit": "500 g",
@@ -33,7 +33,7 @@
   },
   "8690504025000": {
     "name": "Tereyaðý 250 g",
-    "brand": "Sütaþ",
+    "brand": "XYZsüt",
     "category": "Süt & Kahvaltýlýk",
     "price": 125.00,
     "unit": "250 g",
@@ -41,7 +41,7 @@
   },
   "8690504012345": {
     "name": "Yoðurt 1 kg",
-    "brand": "Sütaþ",
+    "brand": "XYZsüt",
     "category": "Süt & Kahvaltýlýk",
     "price": 65.00,
     "unit": "1 kg",
@@ -49,7 +49,7 @@
   },
   "8690637002328": {
     "name": "Çikolatalý Gofret 36 g",
-    "brand": "Ülker",
+    "brand": "KLM Gýda",
     "category": "Atýþtýrmalýk",
     "price": 12.00,
     "unit": "36 g",
@@ -57,7 +57,7 @@
   },
   "8690637026010": {
     "name": "Sütlü Çikolata 60 g",
-    "brand": "Ülker",
+    "brand": "KLM Gýda",
     "category": "Atýþtýrmalýk",
     "price": 22.00,
     "unit": "60 g",
@@ -65,7 +65,7 @@
   },
   "8690504013562": {
     "name": "Burçak Bisküvi 131 g",
-    "brand": "Eti",
+    "brand": "STU Gýda",
     "category": "Atýþtýrmalýk",
     "price": 18.50,
     "unit": "131 g",
@@ -73,7 +73,7 @@
   },
   "8690627003014": {
     "name": "Kavrulmuþ Fýndýk 200 g",
-    "brand": "Tadým",
+    "brand": "FGH Kuruyemiþ",
     "category": "Kuruyemiþ",
     "price": 89.90,
     "unit": "200 g",
@@ -81,7 +81,7 @@
   },
   "8690575000017": {
     "name": "Ayçiçek Yaðý 5 L",
-    "brand": "Yudum",
+    "brand": "BNM Yað",
     "category": "Yað & Sos",
     "price": 189.00,
     "unit": "5 L",
@@ -89,7 +89,7 @@
   },
   "8690575004350": {
     "name": "Zeytinyaðý 1 L",
-    "brand": "Komili",
+    "brand": "GHJ Yað",
     "category": "Yað & Sos",
     "price": 265.00,
     "unit": "1 L",
@@ -97,7 +97,7 @@
   },
   "8690575006789": {
     "name": "Salça 700 g",
-    "brand": "Tukaþ",
+    "brand": "TYU Salça",
     "category": "Yað & Sos",
     "price": 55.00,
     "unit": "700 g",
@@ -105,7 +105,7 @@
   },
   "8690575007890": {
     "name": "Spagetti Makarna 500 g",
-    "brand": "Barilla",
+    "brand": "MKR Makarna",
     "category": "Temel Gýda",
     "price": 28.50,
     "unit": "500 g",
@@ -113,7 +113,7 @@
   },
   "8690123456789": {
     "name": "Baldo Pirinç 1 kg",
-    "brand": "Reis",
+    "brand": "HGF Bakliyat",
     "category": "Temel Gýda",
     "price": 62.00,
     "unit": "1 kg",
