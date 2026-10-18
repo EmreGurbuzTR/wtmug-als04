@@ -20,7 +20,7 @@ iki farklý modda fiyat kontrolü yapan PWA.
 {
   "8690504009626": {
     "name": "Tam Yaðlý Süt 1 L",
-    "brand": "Sütaþ",
+    "brand": "XYZsüt",
     "category": "Süt & Kahvaltýlýk",
     "price": 42.50,
     "unit": "1 L",
